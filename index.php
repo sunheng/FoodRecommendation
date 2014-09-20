@@ -77,7 +77,9 @@
               <div style="width: 420px;">42</div>
             </div> -->
             <div class="recData"></div>
-
+            <button type="submit" class="btn btn-info btn-lg back">
+              <span class="glyphicon glyphicon-arrow-left"></span> 
+            </button>
           </div>
 
           <div class="mastfoot">
@@ -155,7 +157,7 @@
           $('body').css('background-color', '#fff');
           $('.main').transition({ y: 600 });
           $('.secondary').fadeIn()
-            .append(restaurantURL);
+            .append('<a href="' + restaurantURL + '">' + restaurantURL + '</a>');
 
           var aggregator = $.ajax({
             url: 'php/yelp_review_aggregator.php',
@@ -176,7 +178,11 @@
                 });
             }
           }); // end ajax call
-          // console.log(recData);
+          $('.back').click(function() {
+            $('body').css('background-color', '#f2ae72');
+            $('.secondary').hide();
+            $('.main').transition({ y: 0 });
+          });
         });
       });
     </script>
