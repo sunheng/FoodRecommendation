@@ -41,7 +41,7 @@
 
           <!--MAIN-->
           <div class="inner cover main">
-            <h1 class="cover-heading">"What would you recommend at...?"</h1>
+            <h1 class="cover-heading question">"What would you recommend at...?"</h1>
             <p class="lead">
               <!-- <form method="post" action="php/sample.php"> -->
                 <div class="col-md-7 dropdown">
@@ -67,7 +67,17 @@
 
           <!--SECONDARY-->
           <div class="inner cover secondary">
-            <h1 class="cover-heading">Second Page</h1>
+            <h1 class="cover-heading topmeals">Top 3 Meals</h1>
+            <!-- <div class="chart">
+              <div style="width: 40px;">4</div> <p>name </p>
+              <div style="width: 80px;">8</div>
+              <div style="width: 150px;">15</div>
+              <div style="width: 160px;">16</div>
+              <div style="width: 230px;">23</div>
+              <div style="width: 420px;">42</div>
+            </div> -->
+            <div class="recData"></div>
+
           </div>
 
           <div class="mastfoot">
@@ -90,9 +100,11 @@
     <script src="js/bootstrap.min.js"></script>
     <script language="JavaScript" src="http://www.geoplugin.net/javascript.gp" type="text/javascript"></script>
     <script src="js/jquery.transit.min.js" type="text/javascript"></script>
+    <script src="http://d3js.org/d3.v3.min.js" charset="utf-8"></script>
     <script src="//code.jquery.com/ui/1.11.1/jquery-ui.js"></script>
     <script>
       $(document).ready(function() {
+        $('.secondary').hide();
         var city = geoplugin_city();
         var state = geoplugin_region();
         $('.location').val(city + ", " + state);
@@ -137,23 +149,35 @@
           }); // end ajax call
           
         }); //end keyup
-        
+        var recData = {};
         $('.submit').click(function() {
+          $('.secondary').fadeIn();
           $('body').css('background-color', '#fff');
           $('.main').transition({ y: 600 });
           $('.secondary').fadeIn()
-            .append(restaurantURL + restaurantReviews);
+            .append(restaurantURL);
 
           var aggregator = $.ajax({
             url: 'php/yelp_review_aggregator.php',
             type: 'post',
             data: {'url': restaurantURL, 'reviewCount': restaurantReviews},
             success: function(data, status) {
-                console.log(JSON.parse(data));
-              }
+                // console.log(JSON.parse(data));
+                console.log(data);
+                recData = JSON.parse(data);
+                var keys = Object.keys(recData);
+                if (keys.length <= 0) {
+                  $('.recData').append('<h4> Not enough data. </h4><br/>');
+                } 
+                keys.forEach(function(key, i){
+                  if (i < 3) {
+                    $('.recData').append('<h4>' + key.toUpperCase() + '</h4><br/>');
+                  }
+                });
+            }
           }); // end ajax call
+          // console.log(recData);
         });
-
       });
     </script>
   </body>

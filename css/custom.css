@@ -14,3 +14,25 @@
 body {
 	overflow: hidden;
 }
+
+.chart div {
+  font: 10px sans-serif;
+  background-color: steelblue;
+  text-align: right;
+  padding: 3px;
+  margin: 1px;
+  color: white;
+}
+
+.cover-heading {
+	font-size: 35px;
+}
+
+.question {
+	padding-bottom: 15px;
+}
+
+.topmeals {
+	top:-100px;
+	padding-bottom: 15px;
+}

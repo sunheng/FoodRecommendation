@@ -12,7 +12,7 @@
 	
 		// $html_page = file_get_html($url);
 		// get_links($html_page);
-	get_recommended_items($url1, $numberOfReviews);
+	get_recommended_items($url, $numberOfReviews);
 	
 	function get_recommended_items($url, $numberOfReviews) {
 		$html_page = file_get_html($url);
@@ -128,7 +128,7 @@
 		$a_array = $html_page->find('a[class=ngram]');
 		$index = 0;
 		foreach($a_array as $a) {
-			if(strlen($a) >= 7) {
+			if(strlen($a) >= 8) {
 				$indexOfEndOfOpenAnchorTag = strpos($a, '>');
 				$indexOfFrontOfEndAnchorTag = strpos($a, '</');
 				$a = substr($a, $indexOfEndOfOpenAnchorTag+1, $indexOfFrontOfEndAnchorTag-$indexOfEndOfOpenAnchorTag-1);
