@@ -82,6 +82,8 @@
             </button>
           </div>
 
+          <div id="loaderImg"><img src="img/ajax-loader.gif" alt=""/></div>
+
           <div class="mastfoot">
             <div class="inner">
               <!-- <p>Cover template for <a href="http://getbootstrap.com">Bootstrap</a>, by <a href="https://twitter.com/mdo">@mdo</a>.</p> -->
@@ -107,6 +109,7 @@
     <script>
       $(document).ready(function() {
         $('.secondary').hide();
+        $('#loaderImg').hide();
         var city = geoplugin_city();
         var state = geoplugin_region();
         $('.location').val(city + ", " + state);
@@ -153,17 +156,20 @@
         }); //end keyup
         var recData = {};
         $('.submit').click(function() {
-          $('.secondary').fadeIn();
           $('body').css('background-color', '#fff');
           $('.main').transition({ y: 600 });
-          $('.secondary').fadeIn()
-            .append('<a href="' + restaurantURL + '">' + restaurantURL + '</a>');
 
           var aggregator = $.ajax({
             url: 'php/yelp_review_aggregator.php',
             type: 'post',
             data: {'url': restaurantURL, 'reviewCount': restaurantReviews},
+            beforeSend: function() {
+              $('#loaderImg').show();
+            },
             success: function(data, status) {
+                $('#loaderImg').hide();
+                $('.secondary').fadeIn()
+               .append('<a href="' + restaurantURL + '">' + restaurantURL + '</a>');
                 // console.log(JSON.parse(data));
                 console.log(data);
                 recData = JSON.parse(data);
