@@ -2,37 +2,48 @@
 	include_once('simple_html_dom.php');
 	include('menu.php');
 	
-	// $numberOfReviews
+	$numberOfReviews = 121;
 	$url = 'http://www.yelp.com/biz/third-and-vine-jersey-city-2';
 	$url1 = 'http://www.yelp.com/biz/california-pizza-kitchen-atlanta-2';
 	$url2 = 'http://www.yelp.com/biz/bone-garden-cantina-atlanta';
 	
-	get_recommended_items($url2);
+	get_recommended_items($url2, $numberOfReviews);
 	
-	function get_recommended_items($url) {
+	function get_recommended_items($url, $numberOfReviews) {
+		// $numberOfReviews /= 40;
+		// echo ceil($numberOfReviews);
 		$html_page = file_get_html($url);
 		$all_reviews = extract_all_comments($html_page);
 		$menu_url = getMenuURL($html_page);
 		$menu_items = getMenuItems($menu_url);
-		$comments = '';
-		foreach($all_reviews as $review) {
-			$comments .= $review->comment . ' ';
-		}
-		$comments = strtolower($comments);
-		$index = 0;
-		// $menu_items_occurences;
-		$recommended_items = '{';
-		foreach($menu_items as $menu_item) {
-			$menu_item = strtolower($menu_item);
-			$numberOfOccurences = substr_count($comments, $menu_item);
-			if($numberOfOccurences != 0) {
-				$recommended_items .= '"' . $menu_item . '": "' . $numberOfOccurences . '", ';
+		$menu_items_occurences;
+		for($i = 0; $i <= floor($numberOfReviews/40); $i++){
+			$temp = $url . '?start=' . ($i*40);
+			$html_page = file_get_html($temp);
+			$all_reviews = extract_all_comments($html_page);
+			$comments = '';
+			foreach($all_reviews as $review) {
+				$comments .= $review->comment . ' ';
 			}
-				// $menu_items_occurences[$menu_item] = $numberOfOccurences;
+			$comments = strtolower($comments);
+			$index = 0;
+			$recommended_items = '{';
+			foreach($menu_items as $menu_item) {
+				$menu_item = strtolower($menu_item);
+				$numberOfOccurences = substr_count($comments, $menu_item);
+				if($numberOfOccurences != 0) {
+					// if(strlen($recommended_items) > 1) {
+						// $recommended_items = substr($recommended_items, 0, count($recommended_items) - 2);
+						// $recommended_items .= ', "' . $menu_item . '": "' . $numberOfOccurences . '"}';
+					// } else {
+						// $recommended_items .= '"' . $menu_item . '": "' . $numberOfOccurences . '"}';
+					// }
+					$menu_items_occurences[$menu_item] += $numberOfOccurences;
+				}
+			}
+			// echo $recommended_items . '<br>';
 		}
-		// $recommended_items = substr($recommended_items, 1);
-		// $recommended_items .= '}';
-		echo $recommended_items;
+		print_r($menu_items_occurences);
 	}
 	
 	function extract_all_comments($html_page) {
