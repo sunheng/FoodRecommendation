@@ -8,8 +8,6 @@
 	$url2 = 'http://www.yelp.com/biz/bone-garden-cantina-atlanta';
 	$url3 = 'http://www.yelp.com/biz/canoe-atlanta-2';
 	
-		// $html_page = file_get_html($url);
-		// get_links($html_page);
 	get_recommended_items($url1, $numberOfReviews);
 	
 	function get_recommended_items($url, $numberOfReviews) {
