@@ -48,7 +48,10 @@
 					$indexOfFrontOfCloseHeaderTag = strpos($menu_item, '</');
 					$menu_item = substr($menu_item, $indexOfEndOfOpenHeaderTag+1, $indexOfFrontOfCloseHeaderTag-$indexOfEndOfOpenHeaderTag-1);
 				}
-				
+				$indexOfDot = strpos($menu_item, '.');
+				if($indexOfDot !== false) {
+					$menu_item = substr($menu_item, $indexOfDot + 1);
+				}
 				$menu_items[$index] = $menu_item;
 				$index = $index + 1;
 			}

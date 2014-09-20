@@ -8,8 +8,11 @@
 	$url = $_POST['url'];
 	$url1 = 'http://www.yelp.com/biz/california-pizza-kitchen-atlanta-2';
 	$url2 = 'http://www.yelp.com/biz/bone-garden-cantina-atlanta';
+	$url3 = 'http://www.yelp.com/biz/canoe-atlanta-2';
 	
-	get_recommended_items($url, $numberOfReviews);
+		// $html_page = file_get_html($url);
+		// get_links($html_page);
+	get_recommended_items($url1, $numberOfReviews);
 	
 	function get_recommended_items($url, $numberOfReviews) {
 		$html_page = file_get_html($url);
@@ -37,49 +40,103 @@
 				}
 			}
 			$recommended_items = '{';
-			$key_value = each($menu_items_occurences);
-			while($key_value !== false) {
-				if(strlen($recommended_items) > 1) {
-					$recommended_items = substr($recommended_items, 0, count($recommended_items) - 2);
-					$recommended_items .= ', "' . $key_value[0] . '": "' . $key_value[1] . '"}';
-				} else {
-					$recommended_items .= '"' . $key_value[0] . '": "' . $key_value[1] . '"}';
-				}
+			if(!empty($menu_items_occurences)) {
 				$key_value = each($menu_items_occurences);
+				while($key_value !== false) {
+					if(strlen($recommended_items) > 1) {
+						$recommended_items = substr($recommended_items, 0, count($recommended_items) - 2);
+						$recommended_items .= ', "' . $key_value[0] . '": "' . $key_value[1] . '"}';
+					} else {
+						$recommended_items .= '"' . $key_value[0] . '": "' . $key_value[1] . '"}';
+					}
+					$key_value = each($menu_items_occurences);
+				}
+			} else {
+				$recommended_items .= '}';
 			}
 		} else {
-			$typesOfFood = array('beef', 'chicken', 'pork', 'lamb', 'tuna', 'salmon', 'veggie', 'vegetarian', 'tofu');
-			$typesOfFood_occurences;
-			for($i = 0; $i <= floor($numberOfReviews/40); $i++){
-				$temp = $url . '?start=' . ($i*40);
-				$html_page = file_get_html($temp);
-				$all_reviews = extract_all_comments($html_page);
-				$comments = '';
-				foreach($all_reviews as $review) {
-					$comments .= $review->comment . ' ';
-				}
-				$comments = strtolower($comments);
-				$index = 0;
-				foreach($typesOfFood as $typeOfFood) {
-					$numberOfOccurences = substr_count($comments, $typeOfFood);
-					if($numberOfOccurences != 0) {
-						$typesOfFood_occurences[$typeOfFood] += $numberOfOccurences;
+			$a_array = get_links($html_page);
+			if(empty($a_array)) {
+				$typesOfFood = array('bacon', 'burrito', 'taco', 'burger', 'pizza', 'beef', 'chicken', 'pork', 'lamb', 'tuna', 'salmon', 'veggie', 'vegetarian', 'tofu');
+				$typesOfFood_occurences;
+				for($i = 0; $i <= floor($numberOfReviews/40); $i++){
+					$temp = $url . '?start=' . ($i*40);
+					$html_page = file_get_html($temp);
+					$all_reviews = extract_all_comments($html_page);
+					$comments = '';
+					foreach($all_reviews as $review) {
+						$comments .= $review->comment . ' ';
+					}
+					$comments = strtolower($comments);
+					$index = 0;
+					foreach($typesOfFood as $typeOfFood) {
+						$numberOfOccurences = substr_count($comments, $typeOfFood);
+						if($numberOfOccurences != 0) {
+							$typesOfFood_occurences[$typeOfFood] += $numberOfOccurences;
+						}
 					}
 				}
-			}
-			$recommended_items = '{';
-			$key_value = each($typesOfFood_occurences);
-			while($key_value !== false) {
-				if(strlen($recommended_items) > 1) {
-					$recommended_items = substr($recommended_items, 0, count($recommended_items) - 2);
-					$recommended_items .= ', "' . $key_value[0] . '": "' . $key_value[1] . '"}';
-				} else {
-					$recommended_items .= '"' . $key_value[0] . '": "' . $key_value[1] . '"}';
-				}
+				$recommended_items = '{';
 				$key_value = each($typesOfFood_occurences);
+				while($key_value !== false) {
+					if(strlen($recommended_items) > 1) {
+						$recommended_items = substr($recommended_items, 0, count($recommended_items) - 2);
+						$recommended_items .= ', "' . $key_value[0] . '": "' . $key_value[1] . '"}';
+					} else {
+						$recommended_items .= '"' . $key_value[0] . '": "' . $key_value[1] . '"}';
+					}
+					$key_value = each($typesOfFood_occurences);
+				}
+			} else {
+				$menu_items = $a_array;
+				$menu_items_occurences;
+				for($i = 0; $i <= floor($numberOfReviews/40); $i++){
+					$temp = $url . '?start=' . ($i*40);
+					$html_page = file_get_html($temp);
+					$all_reviews = extract_all_comments($html_page);
+					$comments = '';
+					foreach($all_reviews as $review) {
+						$comments .= $review->comment . ' ';
+					}
+					$comments = strtolower($comments);
+					$index = 0;
+					foreach($menu_items as $menu_item) {
+						$menu_item = strtolower($menu_item);
+						$numberOfOccurences = substr_count($comments, $menu_item);
+						if($numberOfOccurences != 0) {
+							$menu_items_occurences[$menu_item] += $numberOfOccurences;
+						}
+					}
+				}
+				$recommended_items = '{';
+				$key_value = each($menu_items_occurences);
+				while($key_value !== false) {
+					if(strlen($recommended_items) > 1) {
+						$recommended_items = substr($recommended_items, 0, count($recommended_items) - 2);
+						$recommended_items .= ', "' . $key_value[0] . '": "' . $key_value[1] . '"}';
+					} else {
+						$recommended_items .= '"' . $key_value[0] . '": "' . $key_value[1] . '"}';
+					}
+					$key_value = each($menu_items_occurences);
+				}
 			}
 		}
 		echo $recommended_items;
+	}
+	
+	function get_links($html_page) {
+		$a_array = $html_page->find('a[class=ngram]');
+		$index = 0;
+		foreach($a_array as $a) {
+			if(strlen($a) >= 7) {
+				$indexOfEndOfOpenAnchorTag = strpos($a, '>');
+				$indexOfFrontOfEndAnchorTag = strpos($a, '</');
+				$a = substr($a, $indexOfEndOfOpenAnchorTag+1, $indexOfFrontOfEndAnchorTag-$indexOfEndOfOpenAnchorTag-1);
+				$a_array[$index] = $a;
+				$index += 1;
+			}
+		}
+		return $a_array;
 	}
 	
 	function extract_all_comments($html_page) {
