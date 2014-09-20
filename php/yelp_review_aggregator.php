@@ -1,9 +1,27 @@
 <?php
-	include('simple_html_dom.php');
+	include_once('simple_html_dom.php');
+	include('menu.php');
+	// $url = 'http://www.yelp.com/biz/third-and-vine-jersey-city-2';
+	// $url1 = 'http://www.yelp.com/biz/california-pizza-kitchen-atlanta-2';
+	// $html_page = file_get_html($url1);
+	// $all_reviews = extract_all_comments($html_page);
+	// $menu_url = getMenuURL($html_page);
+	// $menu_items = getMenuItems($menu_url);
+	// print_r($all_reviews);
+	// print_r($menu_items);
 	
-	$html_page = file_get_html('http://www.yelp.com/biz/third-and-vine-jersey-city-2');
-	$all_reviews = extract_all_comments($html_page);
-	print_r($all_reviews);
+	// foreach($all_reviews as $review) {
+		// foreach($menu_items as $menu_item) {
+			// $menu_item = strtolower($menu_item);
+			// $menu_item = preg_replace('/\s+/','_',$menu_item);
+			// $words = explode('_', $menu_item);
+			// foreach($words as $word) {
+				// if(
+				// $menu_item_hash = hash('md4', $word, 
+			
+			// }
+		// }
+	// }
 	
 	function extract_all_comments($html_page) {
 		$review_class = 'review-content';
