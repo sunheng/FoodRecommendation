@@ -14,13 +14,14 @@
 	
 	function getMenuURL($html) {
 		$menu_url = false;
-		foreach($html->find('a') as $element)
+		foreach($html->find('a') as $element) {
 			if(strcmp($element->class, 'menu-explore') == 0) {
 				$menu_url = 'http://www.yelp.com' . $element->href;
 			} elseif(strpos($element->class, 'external-menu') !== false) {
 				// $menu_url = $element->href;
 				$menu_url = false;
 			}
+		}
 		return $menu_url;
 	}
 	
@@ -47,6 +48,7 @@
 					$indexOfFrontOfCloseHeaderTag = strpos($menu_item, '</');
 					$menu_item = substr($menu_item, $indexOfEndOfOpenHeaderTag+1, $indexOfFrontOfCloseHeaderTag-$indexOfEndOfOpenHeaderTag-1);
 				}
+				
 				$menu_items[$index] = $menu_item;
 				$index = $index + 1;
 			}
