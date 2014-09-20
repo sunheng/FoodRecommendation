@@ -17,6 +17,7 @@
     <!-- Custom styles for this template -->
     <link href="css/cover.css" rel="stylesheet">
     <link href="css/custom.css" rel="stylesheet">
+    <link rel="stylesheet" href="//code.jquery.com/ui/1.11.1/themes/smoothness/jquery-ui.css">
   </head>
 
   <body>
@@ -42,9 +43,17 @@
           <div class="inner cover main">
             <h1 class="cover-heading">"What would you recommend at..."</h1>
             <p class="lead">
-              <form method="post" action="php/sample.php">
-                <div class="col-md-7">
-                  <input type="text" name="term" class="form-control search-bar restaurant" placeholder="Enter a restaurant">
+              <!-- <form method="post" action="php/sample.php"> -->
+                <div class="col-md-7 dropdown">
+                  <input type="text" name="term" id="dropdownMenu1" class="form-control search-bar restaurant dropdown-toggle" data-toggle="dropdown" placeholder="Enter a restaurant">
+                  <ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu1">
+                    <!-- <li class="direction"><em>It may be a particular food</em></li> -->
+                    <li class="dropdownMessage" role="presentation"><a role="menuitem" tabindex="-1"><em>It may be a particular food</em></a></li>
+                    <!-- <li role="presentation"><a role="menuitem" tabindex="-1" href="#">Another action</a></li> -->
+                    <!-- <li role="presentation"><a role="menuitem" tabindex="-1" href="#">Something else here</a></li> -->
+                    <!-- <li role="presentation" class="divider"></li> -->
+                    <!-- <li role="presentation"><a role="menuitem" tabindex="-1" href="#">Separated link</a></li> -->
+                  </ul>
                 </div>
                 <div class="col-md-4">
                     <input type="text" name="location" class="form-control search-bar location" placeholder="Near">
@@ -54,10 +63,7 @@
                       <span class="glyphicon glyphicon-search"></span> 
                     </button>
                 </div>
-              </form>
-            </p>
-            <p class="lead test">
-              safd
+              <!-- </form> -->
             </p>
           </div>
 
@@ -86,16 +92,65 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
     <script src="js/bootstrap.min.js"></script>
     <script language="JavaScript" src="http://www.geoplugin.net/javascript.gp" type="text/javascript"></script>
+    <!--<script src="js/typeahead.bundle.js" type="text/javascript"></script>-->
+    <script src="//code.jquery.com/ui/1.11.1/jquery-ui.js"></script>
     <script>
       $(document).ready(function() {
         var city = geoplugin_city();
         var state = geoplugin_region();
         $('.location').val(city + ", " + state);
 
-        $('.submit').on('click', function(e){
-          e.preventDefault();
+        var restaurantList = [];
+        var restaurantNames = [];
 
-        });
+        $('.search-bar').on('keyup', function(e){
+          e.preventDefault();
+          $term = $('.restaurant').val();
+          $location = $('.location').val();
+          
+          var xhr = $.ajax({
+            url: 'php/yelp_api.php',
+            type: 'post',
+            data: {'term': $term, 'location': $location},
+            success: function(data, status) {
+              var restaurantList = [];
+              $('.dropdownMessage').hide();
+              $('li.options').remove();
+              data = data.substring(16);
+              var dataLines = data.split('\n');
+              restaurantList = [];
+              restaurantNames = [];
+              for (var i = 0; i < dataLines.length - 1; i++) {
+                var jsonFormat = JSON.parse(dataLines[i]);
+                if (!jsonFormat.hasOwnProperty('error')) {
+                  // console.log(jsonFormat);
+                  restaurantList.push(jsonFormat);
+                  restaurantNames.push(jsonFormat.name);
+                  $('.dropdown-menu').append('<li class="options" role="presentation"><a role="menuitem" tabindex="-1">' + jsonFormat.name + '</a></li>');
+                }
+              }
+              $('.options').click(function() {
+                $('.restaurant').val($(this).text());
+              });
+              console.log(restaurantList);
+              // $('.restaurant').autocomplete( "option", "source", restaurantNames);
+              // console.log(restaurantNames);
+              // console.log(restaurantList);
+              // restaurantList.forEach(function(restaurant) {
+              //   $('.test').append(restaurant.name+"\n");
+              // });
+            }
+          }); // end ajax call
+          
+        }); //end keyup
+
+        // $(function() {
+        //   $( ".restaurant").autocomplete({
+        //     source: restaurantNames,
+        //     search: ''
+        //   });
+        // });
+
       });
     </script>
   </body>

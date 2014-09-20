@@ -2,3 +2,11 @@
 	height: 45px;
 	font-size: 20px;
 }
+
+.dropdown-menu {
+	margin-left: 15px;
+}
+
+.direction {
+	text-align: center;
+}
