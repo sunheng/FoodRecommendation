@@ -2,33 +2,55 @@
 	include('simple_html_dom.php');
 	
 	$html_page = file_get_html('http://www.yelp.com/biz/third-and-vine-jersey-city-2');
-	$all_reviews = extract_all_comments($html_page);
-	$i = 0;
-	foreach ($all_reviews as $review) print $i++ . '<br />' . $review;
-	print(strlen($all_reviews[1]));
+	extract_all_comments($html_page);
 	
 	function extract_all_comments($html_page) {
-		$all_reviews = array();
-		$review_class = 'review_comment ieSucks';
-		$end_pos = 0;
-		foreach($html_page->find('p') as $element) {
-			$start_pos = $end_pos + strpos($element, 'review_comment ieSucks') + strlen($review_class);
-			if ($start_idx !== 0) {
-				$unclipped_comment = substr($element, $start_pos);
-				
-				if (strpos($unclipped_comment, 'star-img stars_5') !== 0) echo 'yes';
-				
-				$end_pos = strpos($unclipped_comment, '</p>') + 1;
-				$clipped_comment = substr($unclipped_comment, strpos($unclipped_comment, '>') + 1, $end_pos);
-				$clean_comment = trim(str_replace('Â', '', $clipped_comment));
-				if (strlen($clean_comment) !== 0) array_push($all_reviews, ($clean_comment));
+		$review_class = 'review-content';
+		$div_array = $html_page->find('div[class=review-list]');
+		$reviews = explode($review_class, $div_array[0]);
+		
+		$comment_delimiter = '<p class="review_comment ieSucks"';
+		$rating_delimiter = '<i class="star-img';
+		$clipped_comment = "";
+		$clipped_rating = "";
+		$rating = 0;
+		foreach($reviews as $review) {
+			$rating_start_pos = strpos($review, $rating_delimiter);
+			if ($rating_start_pos !== false) {
+				$unclipped_rating = substr($review, $rating_start_pos);
+				$end_pos = strpos($unclipped_rating, '</i>') + strlen('</i>');
+				$clipped_rating = substr($unclipped_rating, 0, $end_pos);
+				if (strpos($clipped_rating, 'stars_1') !== false) {
+					$rating = 1;
+				} else if (strpos($clipped_rating, 'stars_2') !== false) {
+					$rating = 2;
+				} else if (strpos($clipped_rating, 'stars_3') !== false) {
+					$rating = 3;
+				} else if (strpos($clipped_rating, 'stars_4') !== false) {
+					$rating = 4;
+				} else if (strpos($clipped_rating, 'stars_5') !== false) {
+					$rating = 5;
+				}
 			}
+		
+			$start_pos = strpos($review, $comment_delimiter);
+			if ($start_pos !== false) {
+				$unclipped_comment = substr($review, $start_pos);
+				$end_pos = strpos($unclipped_comment, '</p>') + strlen('</p>');
+				$clipped_comment = substr($unclipped_comment, 0, $end_pos);
+			}
+			$all_reviews[] = new Review($clipped_comment, $rating);
 		}
+		unset($all_reviews[0]);
 		return $all_reviews;
 	}
-	
+
 	class Review {
-		public $rating = 0;
-		public review = '';
+		public $stars = 0;
+		public $comment = '';
+		public function  __construct($comment, $stars) {
+			$this->comment = $comment;
+			$this->stars = $stars;
+		}
 	}
 ?>
