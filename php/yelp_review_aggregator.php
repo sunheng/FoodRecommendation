@@ -2,7 +2,8 @@
 	include('simple_html_dom.php');
 	
 	$html_page = file_get_html('http://www.yelp.com/biz/third-and-vine-jersey-city-2');
-	extract_all_comments($html_page);
+	$all_reviews = extract_all_comments($html_page);
+	print_r($all_reviews);
 	
 	function extract_all_comments($html_page) {
 		$review_class = 'review-content';
