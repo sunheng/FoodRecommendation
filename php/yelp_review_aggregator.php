@@ -2,8 +2,10 @@
 	include_once('simple_html_dom.php');
 	include('menu.php');
 	
-	$numberOfReviews = 41;
-	$url = 'http://www.yelp.com/biz/third-and-vine-jersey-city-2';
+	// $numberOfReviews = 41;
+	// $url = 'http://www.yelp.com/biz/third-and-vine-jersey-city-2';
+	$numberOfReviews = $_POST['reviewCount'];
+	$url = $_POST['url'];
 	$url1 = 'http://www.yelp.com/biz/california-pizza-kitchen-atlanta-2';
 	$url2 = 'http://www.yelp.com/biz/bone-garden-cantina-atlanta';
 	$url3 = 'http://www.yelp.com/biz/canoe-atlanta-2';

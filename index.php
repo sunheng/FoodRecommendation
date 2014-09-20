@@ -30,7 +30,7 @@
 
           <div class="masthead clearfix">
             <div class="inner">
-              <h3 class="masthead-brand">Rec Me Food</h3>
+              <!-- <h3 class="masthead-brand">Rec Me Food</h3> -->
               <!-- <ul class="nav masthead-nav">
                 <li class="active"><a href="#">Home</a></li>
                 <li><a href="#">Features</a></li>
@@ -41,13 +41,12 @@
 
           <!--MAIN-->
           <div class="inner cover main">
-            <h1 class="cover-heading">"What would you recommend at..."</h1>
+            <h1 class="cover-heading">"What would you recommend at...?"</h1>
             <p class="lead">
               <!-- <form method="post" action="php/sample.php"> -->
                 <div class="col-md-7 dropdown">
                   <input type="text" name="term" id="dropdownMenu1" class="form-control search-bar restaurant dropdown-toggle" data-toggle="dropdown" placeholder="Enter a restaurant">
                   <ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu1">
-                    <!-- <li class="direction"><em>It may be a particular food</em></li> -->
                     <li class="dropdownMessage" role="presentation"><a role="menuitem" tabindex="-1"><em>It may be a particular food</em></a></li>
                     <!-- <li role="presentation" class="divider"></li> -->
                     <!-- <li role="presentation"><a role="menuitem" tabindex="-1" href="#">Separated link</a></li> -->
@@ -67,9 +66,9 @@
 
 
           <!--SECONDARY-->
-          <!-- <div class="inner cover secondary">
+          <div class="inner cover secondary">
             <h1 class="cover-heading">Second Page</h1>
-          </div> -->
+          </div>
 
           <div class="mastfoot">
             <div class="inner">
@@ -90,7 +89,7 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
     <script src="js/bootstrap.min.js"></script>
     <script language="JavaScript" src="http://www.geoplugin.net/javascript.gp" type="text/javascript"></script>
-    <!--<script src="js/typeahead.bundle.js" type="text/javascript"></script>-->
+    <script src="js/jquery.transit.min.js" type="text/javascript"></script>
     <script src="//code.jquery.com/ui/1.11.1/jquery-ui.js"></script>
     <script>
       $(document).ready(function() {
@@ -140,7 +139,19 @@
         }); //end keyup
         
         $('.submit').click(function() {
-          console.log(restaurantURL + " " + restaurantReviews);
+          $('body').css('background-color', '#fff');
+          $('.main').transition({ y: 600 });
+          $('.secondary').fadeIn()
+            .append(restaurantURL + restaurantReviews);
+
+          var aggregator = $.ajax({
+            url: 'php/yelp_review_aggregator.php',
+            type: 'post',
+            data: {'url': restaurantURL, 'reviewCount': restaurantReviews},
+            success: function(data, status) {
+                console.log(JSON.parse(data));
+              }
+          }); // end ajax call
         });
 
       });
