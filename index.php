@@ -49,8 +49,6 @@
                   <ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu1">
                     <!-- <li class="direction"><em>It may be a particular food</em></li> -->
                     <li class="dropdownMessage" role="presentation"><a role="menuitem" tabindex="-1"><em>It may be a particular food</em></a></li>
-                    <!-- <li role="presentation"><a role="menuitem" tabindex="-1" href="#">Another action</a></li> -->
-                    <!-- <li role="presentation"><a role="menuitem" tabindex="-1" href="#">Something else here</a></li> -->
                     <!-- <li role="presentation" class="divider"></li> -->
                     <!-- <li role="presentation"><a role="menuitem" tabindex="-1" href="#">Separated link</a></li> -->
                   </ul>
@@ -102,6 +100,8 @@
 
         var restaurantList = [];
         var restaurantNames = [];
+        var restaurantURL = '';
+        var restaurantReviews = '';
 
         $('.search-bar').on('keyup', function(e){
           e.preventDefault();
@@ -126,30 +126,22 @@
                   // console.log(jsonFormat);
                   restaurantList.push(jsonFormat);
                   restaurantNames.push(jsonFormat.name);
-                  $('.dropdown-menu').append('<li class="options" role="presentation"><a role="menuitem" tabindex="-1">' + jsonFormat.name + '</a></li>');
+                  $('.dropdown-menu').append('<li class="options" data-url="' + jsonFormat.url +'" data-reviews="' + jsonFormat.review_count +'" role="presentation"><a role="menuitem" tabindex="-1">' + jsonFormat.name + '</a></li>');
                 }
               }
               $('.options').click(function() {
+                restaurantURL = $(this).data('url');
+                restaurantReviews = $(this).data('reviews');
                 $('.restaurant').val($(this).text());
               });
-              console.log(restaurantList);
-              // $('.restaurant').autocomplete( "option", "source", restaurantNames);
-              // console.log(restaurantNames);
-              // console.log(restaurantList);
-              // restaurantList.forEach(function(restaurant) {
-              //   $('.test').append(restaurant.name+"\n");
-              // });
             }
           }); // end ajax call
           
         }); //end keyup
-
-        // $(function() {
-        //   $( ".restaurant").autocomplete({
-        //     source: restaurantNames,
-        //     search: ''
-        //   });
-        // });
+        
+        $('.submit').click(function() {
+          console.log(restaurantURL + " " + restaurantReviews);
+        });
 
       });
     </script>
