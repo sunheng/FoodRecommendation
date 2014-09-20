@@ -116,7 +116,7 @@
               var restaurantList = [];
               $('.dropdownMessage').hide();
               $('li.options').remove();
-              data = data.substring(16);
+              data = data.substring(data.indexOf('{'));
               var dataLines = data.split('\n');
               restaurantList = [];
               restaurantNames = [];
