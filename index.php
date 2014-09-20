@@ -42,17 +42,30 @@
           <div class="inner cover main">
             <h1 class="cover-heading">"What would you recommend at..."</h1>
             <p class="lead">
-              <input type="text" class="form-control search-bar" placeholder="Enter Restaurant">
-            <p class="lead">
-              <a href="javascript:void(0)" class="search btn btn-lg btn-info">Search</a>
+              <form method="post" action="php/sample.php">
+                <div class="col-md-7">
+                  <input type="text" name="term" class="form-control search-bar restaurant" placeholder="Enter a restaurant">
+                </div>
+                <div class="col-md-4">
+                    <input type="text" name="location" class="form-control search-bar location" placeholder="Near">
+                </div>
+                <div class="col-md-1">
+                    <button type="submit" class="btn btn-info btn-lg submit">
+                      <span class="glyphicon glyphicon-search"></span> 
+                    </button>
+                </div>
+              </form>
+            </p>
+            <p class="lead test">
+              safd
             </p>
           </div>
 
 
           <!--SECONDARY-->
-          <div class="inner cover secondary">
+          <!-- <div class="inner cover secondary">
             <h1 class="cover-heading">Second Page</h1>
-          </div>
+          </div> -->
 
           <div class="mastfoot">
             <div class="inner">
@@ -67,17 +80,22 @@
     </div>
 
 
-
     <!-- Bootstrap core JavaScript
     ================================================== -->
     <!-- Placed at the end of the document so the pages load faster -->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
     <script src="js/bootstrap.min.js"></script>
+    <script language="JavaScript" src="http://www.geoplugin.net/javascript.gp" type="text/javascript"></script>
     <script>
-      $('.secondary').hide();
-      $('.search').click(function() {
-        $('.main').hide();
-        $('.secondary').show();
+      $(document).ready(function() {
+        var city = geoplugin_city();
+        var state = geoplugin_region();
+        $('.location').val(city + ", " + state);
+
+        $('.submit').on('click', function(e){
+          e.preventDefault();
+
+        });
       });
     </script>
   </body>
