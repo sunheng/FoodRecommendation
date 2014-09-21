@@ -67,7 +67,7 @@
 
           <!--SECONDARY-->
           <div class="inner cover secondary">
-            <h1 class="cover-heading topmeals">Top 3 Meals</h1>
+            <h1 class="cover-heading topmeals">Top Meals</h1>
             <!-- <div class="chart">
               <div style="width: 40px;">4</div> <p>name </p>
               <div style="width: 80px;">8</div>
@@ -77,8 +77,12 @@
               <div style="width: 420px;">42</div>
             </div> -->
             <div class="recData"></div>
-
+            <button type="submit" class="btn btn-info btn-lg back">
+              <span class="glyphicon glyphicon-arrow-left"></span> 
+            </button>
           </div>
+
+          <div id="loaderImg"><img src="img/ajax-loader.gif" alt=""/></div>
 
           <div class="mastfoot">
             <div class="inner">
@@ -105,6 +109,7 @@
     <script>
       $(document).ready(function() {
         $('.secondary').hide();
+        $('#loaderImg').hide();
         var city = geoplugin_city();
         var state = geoplugin_region();
         $('.location').val(city + ", " + state);
@@ -151,17 +156,20 @@
         }); //end keyup
         var recData = {};
         $('.submit').click(function() {
-          $('.secondary').fadeIn();
           $('body').css('background-color', '#fff');
           $('.main').transition({ y: 600 });
-          $('.secondary').fadeIn()
-            .append(restaurantURL);
 
           var aggregator = $.ajax({
             url: 'php/yelp_review_aggregator.php',
             type: 'post',
             data: {'url': restaurantURL, 'reviewCount': restaurantReviews},
+            beforeSend: function() {
+              $('#loaderImg').show();
+            },
             success: function(data, status) {
+                $('#loaderImg').hide();
+                $('.secondary').fadeIn()
+               .append('<a target="_blank" href="' + restaurantURL + '">' + restaurantURL + '</a>');
                 // console.log(JSON.parse(data));
                 console.log(data);
                 recData = JSON.parse(data);
@@ -176,7 +184,11 @@
                 });
             }
           }); // end ajax call
-          // console.log(recData);
+          $('.back').click(function() {
+            $('body').css('background-color', '#f2ae72');
+            $('.secondary').hide();
+            $('.main').transition({ y: 0 });
+          });
         });
       });
     </script>
