@@ -67,7 +67,7 @@
 
           <!--SECONDARY-->
           <div class="inner cover secondary">
-            <h1 class="cover-heading topmeals">Top 3 Meals</h1>
+            <h1 class="cover-heading topmeals">Top Meals</h1>
             <!-- <div class="chart">
               <div style="width: 40px;">4</div> <p>name </p>
               <div style="width: 80px;">8</div>
@@ -169,7 +169,7 @@
             success: function(data, status) {
                 $('#loaderImg').hide();
                 $('.secondary').fadeIn()
-               .append('<a href="' + restaurantURL + '">' + restaurantURL + '</a>');
+               .append('<a target="_blank" href="' + restaurantURL + '">' + restaurantURL + '</a>');
                 // console.log(JSON.parse(data));
                 console.log(data);
                 recData = JSON.parse(data);
