@@ -99,35 +99,17 @@
 		$review_class = 'review-content';
 		$div_array = $html_page->find('div[class=review-list]');
 		$reviews = explode($review_class, $div_array[0]);
-		
 		$comment_delimiter = '<p class="review_comment ieSucks"';
 		$rating_delimiter = '<i class="star-img';
 		$clipped_comment = "";
 		$clipped_rating = "";
 		foreach($reviews as $review) {
 			$rating_start_pos = strpos($review, $rating_delimiter);
-			$rating = 0;
 			if ($rating_start_pos !== false) {
 				$unclipped_rating = substr($review, $rating_start_pos);
 				$end_pos = strpos($unclipped_rating, '</i>') + strlen('</i>');
 				$clipped_rating = substr($unclipped_rating, 0, $end_pos);
-				// if (strpos($clipped_rating, 'stars_1') !== false) {
-					// $rating = 1;
-				// } else if (strpos($clipped_rating, 'stars_2') !== false) {
-					// $rating = 2;
-				// } else if (strpos($clipped_rating, 'stars_3') !== false) {
-					// $rating = 3;
-				// } else 
-				if (strpos($clipped_rating, 'stars_4') !== false) {
-					$rating = 4;
-				} else if (strpos($clipped_rating, 'stars_4_half') !== false) {
-					$rating = 4.5;
-				} else if (strpos($clipped_rating, 'stars_5') !== false) {
-					$rating = 5;
-				}
-			}
-			
-			if($rating != 0) {
+				if (strpos($clipped_rating, 'stars_4') !== false | strpos($clipped_rating, 'stars_4_half') !== false | strpos($clipped_rating, 'stars_5') !== false) {
 				$start_pos = strpos($review, $comment_delimiter);
 				if ($start_pos !== false) {
 					$unclipped_comment = substr($review, $start_pos);
@@ -135,16 +117,10 @@
 					$clipped_comment = substr($unclipped_comment, 0, $end_pos);
 				}
 				$all_reviews[] = $clipped_comment;
+				}
 			}
 		}
 		unset($all_reviews[0]);
 		return $all_reviews;
 	}
-
-	// class Review {
-		// public $comment = '';
-		// public function  __construct($comment) {
-			// $this->comment = $comment;
-		// }
-	// }
 ?>
